@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import SearchTracks from './components/SearchTracks';
+import Purchase from './components/Purchase';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('search');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header style={{background:'#232f3e', color:'white', padding:'20px'}}>
+        <h1>🎵 Chinook Music Store</h1>
+        <nav>
+          <button onClick={() => setActiveTab('search')}
+            style={{margin:'5px', padding:'10px 20px', cursor:'pointer',
+              background: activeTab==='search' ? '#ff9900' : '#fff'}}>
+            Buscar Canciones
+          </button>
+          <button onClick={() => setActiveTab('purchase')}
+            style={{margin:'5px', padding:'10px 20px', cursor:'pointer',
+              background: activeTab==='purchase' ? '#ff9900' : '#fff'}}>
+            Realizar Compra
+          </button>
+        </nav>
       </header>
+      <main style={{padding:'20px'}}>
+        {activeTab === 'search' && <SearchTracks />}
+        {activeTab === 'purchase' && <Purchase />}
+      </main>
     </div>
   );
 }
