@@ -5,45 +5,35 @@ on:
     branches: [main]
 
 jobs:
-test-backend:
+  test-backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: |
-          cd chinook-backend
-          pip install -r requirements.txt
+        run: pip install -r chinook-backend/requirements.txt
       - name: Run tests
-        run: |
-          cd chinook-backend
-          pytest tests/ -v
+        run: cd chinook-backend && pytest tests/ -v
 
   test-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
       - name: Install dependencies
-        run: |
-          cd chinook-frontend
-          npm install
+        run: cd chinook-frontend && npm install
       - name: Run tests
-        run: |
-          cd chinook-frontend
-          npm test -- --watchAll=false
+        run: cd chinook-frontend && npm test -- --watchAll=false
 
   deploy-backend:
     needs: test-backend
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Backend EC2
+      - name: Deploy Backend
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.BACKEND_HOST }}
@@ -60,7 +50,7 @@ test-backend:
     needs: test-frontend
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Frontend EC2
+      - name: Deploy Frontend
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FRONTEND_HOST }}
