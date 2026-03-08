@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import artists, albums, tracks, customers, invoices
+from routers import artists, albums, tracks, customers, invoices, auth
 
 app = FastAPI(title="Chinook API")
 
@@ -17,6 +17,7 @@ app.include_router(albums.router)
 app.include_router(tracks.router)
 app.include_router(customers.router)
 app.include_router(invoices.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def root():

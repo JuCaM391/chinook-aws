@@ -1,7 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-# Mock the engine creation BEFORE any imports
 with patch("sqlalchemy.create_engine") as mock_engine:
     mock_engine.return_value = MagicMock()
     from fastapi.testclient import TestClient
@@ -38,3 +37,16 @@ def test_get_customers():
     with patch("database.get_db", get_mock_db):
         response = client.get("/customers/")
         assert response.status_code == 200
+
+def test_login_exitoso():
+    response = client.post("/auth/login", json={"username": "admin", "password": "admin123"})
+    assert response.status_code == 200
+    assert "access_token" in response.json()
+
+def test_login_fallido():
+    response = client.post("/auth/login", json={"username": "admin", "password": "wrongpass"})
+    assert response.status_code == 401
+
+def test_token_invalido():
+    response = client.get("/auth/verify?token=tokenfalso")
+    assert response.status_code == 401
