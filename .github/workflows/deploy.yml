@@ -25,9 +25,9 @@ jobs:
         with:
           node-version: '18'
       - name: Install dependencies
-        run: cd chinook-frontend && npm install
+        run: npm install
       - name: Run tests
-        run: cd chinook-frontend && npm test -- --watchAll=false
+        run: npm test -- --watchAll=false
 
   deploy-backend:
     needs: test-backend
