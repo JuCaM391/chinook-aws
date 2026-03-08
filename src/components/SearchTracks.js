@@ -37,13 +37,13 @@ function SearchTracks() {
       }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '16px' }}>
           <input placeholder="🎵 Nombre de canción" value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={e => setName(e.target.value.replace(/[0-9]/g, ""))}
             style={inputStyle} />
           <input placeholder="🎤 Artista" value={artist}
-            onChange={e => setArtist(e.target.value)}
+            onChange={e => setArtist(e.target.value.replace(/[0-9]/g, ""))}
             style={inputStyle} />
           <input placeholder="🎸 Género" value={genre}
-            onChange={e => setGenre(e.target.value)}
+            onChange={e => setGenre(e.target.value.replace(/[0-9]/g, ""))}
             style={inputStyle} />
         </div>
         <button onClick={handleSearch} disabled={loading} style={btnStyle}>
