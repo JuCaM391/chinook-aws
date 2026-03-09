@@ -91,10 +91,28 @@ function App() {
 }
 
 function AdminPanel({ token }) {
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const loadInvoices = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('http://54.152.159.189:8000/invoices/');
+      const data = await res.json();
+      setInvoices(data);
+    } catch {
+      setError('Error al cargar las compras');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <h2 style={{ color: '#1a1a2e', marginBottom: '20px' }}>👑 Panel de Administrador</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
         {[
           { icon: '🎵', label: 'Canciones', color: '#ff9900' },
           { icon: '👥', label: 'Clientes', color: '#3498db' },
@@ -111,13 +129,46 @@ function AdminPanel({ token }) {
           </div>
         ))}
       </div>
-      <div style={{
-        marginTop: '20px', background: 'white', borderRadius: '12px',
-        padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.08)'
-      }}>
-        <p style={{ color: '#666', margin: 0 }}>
-          ✅ Token activo — sesión de administrador iniciada correctamente.
-        </p>
+
+      <div style={{ background: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h3 style={{ margin: 0, color: '#1a1a2e' }}>🧾 Compras realizadas</h3>
+          <button onClick={loadInvoices} disabled={loading} style={{
+            padding: '8px 20px', background: '#ff9900', border: 'none',
+            borderRadius: '8px', color: 'white', fontWeight: '700', cursor: 'pointer'
+          }}>
+            {loading ? 'Cargando...' : 'Cargar compras'}
+          </button>
+        </div>
+
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        {invoices.length > 0 && (
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: 'linear-gradient(135deg, #1a1a2e, #16213e)', color: 'white' }}>
+                <th style={{ padding: '12px', textAlign: 'left' }}>ID</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Cliente</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Fecha</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices.map((inv, i) => (
+                <tr key={inv.InvoiceId} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
+                  <td style={{ padding: '12px' }}>{inv.InvoiceId}</td>
+                  <td style={{ padding: '12px' }}>{inv.CustomerId}</td>
+                  <td style={{ padding: '12px' }}>{new Date(inv.InvoiceDate).toLocaleDateString()}</td>
+                  <td style={{ padding: '12px', color: '#ff9900', fontWeight: '700' }}>${inv.Total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {invoices.length === 0 && !loading && (
+          <p style={{ color: '#666', textAlign: 'center' }}>Haz clic en "Cargar compras" para ver las facturas</p>
+        )}
       </div>
     </div>
   );
