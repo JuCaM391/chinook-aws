@@ -14,7 +14,7 @@ function Login({ onLogin }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://54.152.159.189:8000/auth/login', {
+      const res = await fetch('http://52.90.133.140:8000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

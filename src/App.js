@@ -99,7 +99,7 @@ function AdminPanel({ token }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://54.152.159.189:8000/invoices/');
+      const res = await fetch('http://52.90.133.140:8000/invoices/');
       const data = await res.json();
       setInvoices(data);
     } catch {

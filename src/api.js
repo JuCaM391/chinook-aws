@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://54.152.159.189:8000'
+  baseURL: 'http://52.90.133.140:8000'
 });
 
 export const getArtists = () => API.get('/artists/');
