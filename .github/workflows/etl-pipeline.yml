@@ -17,27 +17,3 @@ jobs:
         run: pip install pandas pyarrow holidays boto3 psycopg2-binary pytest
       - name: Run ETL tests
         run: pytest tests/test_etl.py -v
-
-  run-etl:
-    needs: test-etl
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install dependencies
-        run: pip install pandas pyarrow holidays boto3 psycopg2-binary
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
-      - name: Run ETLs
-        run: |
-          python etl/etl_dim_date.py
-          python etl/etl_dim_customer.py
-          python etl/etl_dim_track.py
-          python etl/etl_fact_sales.py
